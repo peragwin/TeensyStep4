@@ -85,11 +85,28 @@ namespace TS4
     //     rotateAsync(vMax);
     // }
 
+    void StepperBase::startStopMoving()
+    {
+        int64_t decLength = v_sqr / twoA + 1;
+        s_tgt = decLength;
+        s = 0;
+        accEnd = 0;
+        decStart = 0;
+    }
+
     void StepperBase::startStopping(int32_t v_end, uint32_t a)
     {
-        //if (!isMoving) return;
-        mode = mode_t::stopping;
-        startRotate(v_end, a);
+        if (!isMoving) return;
+
+        if (mode == mode_t::target) {
+            startStopMoving();
+        }
+
+        else if (mode == mode_t::rotate) {
+            mode = mode_t::stopping;
+            startRotate(v_end, a);
+        }
+
         mode = mode_t::stopping;
         // SerialUSB1.println("stoprot");
         // SerialUSB1.flush();
