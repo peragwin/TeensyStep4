@@ -85,9 +85,9 @@ namespace TS4
     //     rotateAsync(vMax);
     // }
 
-    void StepperBase::startStopMoving()
+    void StepperBase::startStopMoving(uint32_t a)
     {
-        int64_t decLength = v_sqr / twoA + 1;
+        int64_t decLength = v_sqr / (2 * a) + 1;
         s_tgt = decLength;
         s = 0;
         accEnd = 0;
@@ -99,7 +99,7 @@ namespace TS4
         if (!isMoving) return;
 
         if (mode == mode_t::target) {
-            startStopMoving();
+            startStopMoving(a);
         }
 
         else if (mode == mode_t::rotate) {
